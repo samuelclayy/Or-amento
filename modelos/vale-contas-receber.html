@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vale - Contas a Receber</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="../js/pdf.js"></script>
+  <script src="../js/vale.js" defer></script>
+</head>
+<body>
+  <div class="main-container">
+    <div class="form-section">
+      <h1>Vale - Contas a Receber</h1>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="vale-empresa">Nome da empresa</label>
+          <input type="text" id="vale-empresa" />
+        </div>
+        <div class="form-group">
+          <label for="vale-cnpj">CNPJ</label>
+          <input type="text" id="vale-cnpj" />
+        </div>
+      </div>
+
+      <h3>Produtos</h3>
+      <div id="vale-itens-form"></div>
+      <div class="button-row">
+        <button type="button" id="vale-add-item">Adicionar produto</button>
+        <button type="button" id="vale-remover-item">Remover último</button>
+      </div>
+
+      <div class="form-group" style="margin-top:12px;">
+        <label for="vale-observacoes">Observações</label>
+        <textarea id="vale-observacoes"></textarea>
+      </div>
+
+      <div class="button-row" style="margin-top:16px;">
+        <button type="button" data-pdf-button="vale-print" onclick="gerarPDF('vale-print','vale-contas-receber.pdf')">Gerar PDF</button>
+        <button type="button" onclick="location.href='../index.html'">Voltar</button>
+      </div>
+    </div>
+
+    <div class="print-wrapper">
+      <div id="vale-print" class="print-area">
+        <div class="document-via">
+          <div class="document-header">
+            <div class="document-header-left">
+              <img src="../img/logo-cadiriri.jpeg" alt="Cadiriri" class="logo-empresa" />
+              <strong>CADIRIRI HIDRAULICA E PNEUMATICA LTDA</strong><br />
+              (11) 2601-2839<br />
+              Rua Barão de Monte Santo, N° 856<br />
+              03123020 - São Paulo, SP<br />
+              CNPJ: 09.577.109/0001-60 &mdash; IE: 148.138.546.116
+            </div>
+            <div class="document-header-right">
+              <span class="badge">Via Cliente</span><br />
+              Data: <span data-bind="data-atual"></span>
+            </div>
+          </div>
+          <div class="document-title">Vale - Contas a Receber</div>
+          <div class="info-grid">
+            <div>
+              <span class="info-item-label">Empresa: </span>
+              <span data-bind="empresa"></span>
+            </div>
+            <div>
+              <span class="info-item-label">CNPJ: </span>
+              <span data-bind="cnpj"></span>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Produto</th>
+                  <th>Código</th>
+                  <th class="text-right">Quantidade</th>
+                  <th class="text-right">Preço unitário (R$)</th>
+                  <th class="text-right">Total (R$)</th>
+                </tr>
+              </thead>
+              <tbody data-bind="tabela-produtos"></tbody>
+              <tfoot>
+                <tr>
+                  <th colspan="4" class="text-right">Total geral</th>
+                  <th class="text-right" data-bind="total-geral"></th>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          <div class="highlight-box">
+            <strong>Dados bancários para pagamento</strong><br />
+            Pix CNPJ: 09.577.109/0001-60
+          </div>
+          <div class="observacoes">
+            <div class="observacoes-label">Observações:</div>
+            <div data-bind="observacoes" class="small-text"></div>
+          </div>
+          <div class="assinatura-area">
+            <div style="flex:1;">
+              <div class="assinatura-linha">Assinatura / Carimbo da empresa</div>
+            </div>
+            <div style="flex:1;">
+              <div class="assinatura-linha">Responsável pela empresa</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="document-via">
+          <div class="document-header">
+            <div class="document-header-left">
+              <img src="logo-cadiriri.jpeg" alt="Cadiriri" class="logo-empresa" />
+              <strong>CADIRIRI HIDRAULICA E PNEUMATICA LTDA</strong><br />
+              (11) 2601-2839<br />
+              Rua Barão de Monte Santo, N° 856<br />
+              03123020 - São Paulo, SP<br />
+              CNPJ: 09.577.109/0001-60 &mdash; IE: 148.138.546.116
+            </div>
+            <div class="document-header-right">
+              <span class="badge">Via Empresa</span><br />
+              Data: <span data-bind="data-atual"></span>
+            </div>
+          </div>
+          <div class="document-title">Vale - Contas a Receber</div>
+          <div class="info-grid">
+            <div>
+              <span class="info-item-label">Empresa: </span>
+              <span data-bind="empresa"></span>
+            </div>
+            <div>
+              <span class="info-item-label">CNPJ: </span>
+              <span data-bind="cnpj"></span>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Produto</th>
+                  <th>Código</th>
+                  <th class="text-right">Quantidade</th>
+                  <th class="text-right">Preço unitário (R$)</th>
+                  <th class="text-right">Total (R$)</th>
+                </tr>
+              </thead>
+              <tbody data-bind="tabela-produtos"></tbody>
+              <tfoot>
+                <tr>
+                  <th colspan="4" class="text-right">Total geral</th>
+                  <th class="text-right" data-bind="total-geral"></th>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          <div class="highlight-box">
+            <strong>Dados bancários para pagamento</strong><br />
+            Pix CNPJ: 09.577.109/0001-60
+          </div>
+          <div class="observacoes">
+            <div class="observacoes-label">Observações:</div>
+            <div data-bind="observacoes" class="small-text"></div>
+          </div>
+          <div class="assinatura-area">
+            <div style="flex:1;">
+              <div class="assinatura-linha">Assinatura / Carimbo da empresa</div>
+            </div>
+            <div style="flex:1;">
+              <div class="assinatura-linha">Responsável pela empresa</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

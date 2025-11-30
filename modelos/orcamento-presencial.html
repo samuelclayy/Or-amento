@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Orçamento Presencial</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="../js/pdf.js"></script>
+  <script src="../js/presencial.js" defer></script>
+</head>
+<body>
+  <div class="main-container">
+    <div class="form-section">
+      <h1>Orçamento Presencial</h1>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="presencial-nome">Nome do cliente</label>
+          <input type="text" id="presencial-nome" />
+        </div>
+      </div>
+
+      <h3>Produtos</h3>
+      <div id="presencial-itens-form"></div>
+      <div class="button-row">
+        <button type="button" id="presencial-add-item">Adicionar produto</button>
+        <button type="button" id="presencial-remover-item">Remover último</button>
+      </div>
+
+      <div class="form-group" style="margin-top:12px;">
+        <label for="presencial-observacoes">Observações</label>
+        <textarea id="presencial-observacoes"></textarea>
+      </div>
+
+      <div class="button-row" style="margin-top:16px;">
+        <button type="button" data-pdf-button="presencial-print" onclick="gerarPDF('presencial-print','orcamento-presencial.pdf')">Gerar PDF</button>
+        <button type="button" onclick="location.href='../index.html'">Voltar</button>
+      </div>
+    </div>
+
+    <div class="print-wrapper">
+      <div id="presencial-print" class="print-area">
+        <div class="document-via">
+          <div class="document-header">
+            <div class="document-header-left">
+              <img src="../img/logo-cadiriri.jpeg" alt="Cadiriri" class="logo-empresa" />
+              <strong>CADIRIRI HIDRAULICA E PNEUMATICA LTDA</strong><br />
+              (11) 2601-2839<br />
+              Rua Barão de Monte Santo, N° 856<br />
+              03123020 - São Paulo, SP<br />
+              CNPJ: 09.577.109/0001-60 &mdash; IE: 148.138.546.116
+            </div>
+            <div class="document-header-right">
+              <span class="badge">Via Cliente</span><br />
+              Data: <span data-bind="data-atual"></span>
+            </div>
+          </div>
+          <div class="document-title">Orçamento Presencial</div>
+          <div class="info-grid">
+            <div>
+              <span class="info-item-label">Cliente: </span>
+              <span data-bind="nome"></span>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Produto</th>
+                  <th>Código</th>
+                  <th class="text-right">Quantidade</th>
+                  <th class="text-right">Preço unitário (R$)</th>
+                  <th class="text-right">Total (R$)</th>
+                </tr>
+              </thead>
+              <tbody data-bind="tabela-produtos"></tbody>
+              <tfoot>
+                <tr>
+                  <th colspan="4" class="text-right">Total geral</th>
+                  <th class="text-right" data-bind="total-geral"></th>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          <div class="observacoes">
+            <div class="observacoes-label">Observações:</div>
+            <div data-bind="observacoes" class="small-text"></div>
+          </div>
+          <div class="assinatura-area">
+            <div style="flex:1;">
+              <div class="assinatura-linha">Assinatura do cliente</div>
+            </div>
+            <div style="flex:1;">
+              <div class="assinatura-linha">Responsável pela empresa</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="document-via">
+          <div class="document-header">
+            <div class="document-header-left">
+              <img src="logo-cadiriri.jpeg" alt="Cadiriri" class="logo-empresa" />
+              <strong>CADIRIRI HIDRAULICA E PNEUMATICA LTDA</strong><br />
+              (11) 2601-2839<br />
+              Rua Barão de Monte Santo, N° 856<br />
+              03123020 - São Paulo, SP<br />
+              CNPJ: 09.577.109/0001-60 &mdash; IE: 148.138.546.116
+            </div>
+            <div class="document-header-right">
+              <span class="badge">Via Empresa</span><br />
+              Data: <span data-bind="data-atual"></span>
+            </div>
+          </div>
+          <div class="document-title">Orçamento Presencial</div>
+          <div class="info-grid">
+            <div>
+              <span class="info-item-label">Cliente: </span>
+              <span data-bind="nome"></span>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Produto</th>
+                  <th>Código</th>
+                  <th class="text-right">Quantidade</th>
+                  <th class="text-right">Preço unitário (R$)</th>
+                  <th class="text-right">Total (R$)</th>
+                </tr>
+              </thead>
+              <tbody data-bind="tabela-produtos"></tbody>
+              <tfoot>
+                <tr>
+                  <th colspan="4" class="text-right">Total geral</th>
+                  <th class="text-right" data-bind="total-geral"></th>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          <div class="observacoes">
+            <div class="observacoes-label">Observações:</div>
+            <div data-bind="observacoes" class="small-text"></div>
+          </div>
+          <div class="assinatura-area">
+            <div style="flex:1;">
+              <div class="assinatura-linha">Assinatura do cliente</div>
+            </div>
+            <div style="flex:1;">
+              <div class="assinatura-linha">Responsável pela empresa</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

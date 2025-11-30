@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Orçamento Normal</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="../js/pdf.js"></script>
+  <script src="../js/normal.js" defer></script>
+</head>
+<body>
+  <div class="main-container">
+    <div class="form-section">
+      <h1>Orçamento Normal</h1>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="normal-empresa">Nome da empresa</label>
+          <input type="text" id="normal-empresa" />
+        </div>
+        <div class="form-group">
+          <label for="normal-cnpj">CNPJ</label>
+          <input type="text" id="normal-cnpj" />
+        </div>
+      </div>
+
+      <h3>Produtos</h3>
+      <div id="normal-itens-form"></div>
+      <div class="button-row">
+        <button type="button" id="normal-add-item">Adicionar produto</button>
+        <button type="button" id="normal-remover-item">Remover último</button>
+      </div>
+
+      <h3 style="margin-top:16px;">Retirada e pagamento</h3>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="normal-retirada">Tipo de retirada</label>
+          <select id="normal-retirada">
+            <option value="loja">Retirada em loja</option>
+            <option value="sedex">Sedex</option>
+          </select>
+        </div>
+        <div class="form-group" id="normal-endereco-group" style="display:none;">
+          <label for="normal-endereco">Endereço para envio (Sedex)</label>
+          <input type="text" id="normal-endereco" />
+        </div>
+        <div class="form-group">
+          <label for="normal-forma-pagamento">Forma de pagamento</label>
+          <select id="normal-forma-pagamento">
+            <option value="vista">À vista</option>
+            <option value="faturado">Faturado</option>
+          </select>
+        </div>
+        <div class="form-group" id="normal-faturado-dias-group" style="display:none;">
+          <label for="normal-faturado-dias">Faturado em (dias)</label>
+          <input type="number" id="normal-faturado-dias" min="0" />
+        </div>
+        <div class="form-group">
+          <label for="normal-frete">Frete (R$)</label>
+          <input type="number" id="normal-frete" min="0" step="0.01" />
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-top:12px;">
+        <label for="normal-observacoes">Observações</label>
+        <textarea id="normal-observacoes"></textarea>
+      </div>
+
+      <div class="button-row" style="margin-top:16px;">
+        <button type="button" data-pdf-button="normal-print" onclick="gerarPDF('normal-print','orcamento-normal.pdf')">Gerar PDF</button>
+        <button type="button" onclick="location.href='../index.html'">Voltar</button>
+      </div>
+    </div>
+
+    <div class="print-wrapper">
+      <div id="normal-print" class="print-area">
+        <div class="document-via">
+          <div class="document-header">
+            <div class="document-header-left">
+              <img src="logo-cadiriri.jpeg" alt="Cadiriri" class="logo-empresa" />
+              <strong>CADIRIRI HIDRAULICA E PNEUMATICA LTDA</strong><br />
+              (11) 2601-2839<br />
+              Rua Barão de Monte Santo, N° 856<br />
+              03123020 - São Paulo, SP<br />
+              CNPJ: 09.577.109/0001-60 &mdash; IE: 148.138.546.116
+            </div>
+            <div class="document-header-right">
+              <span class="badge">Via Cliente</span><br />
+              Data: <span data-bind="data-atual"></span>
+            </div>
+          </div>
+          <div class="document-title">Orçamento Comercial</div>
+          <div class="info-grid">
+            <div>
+              <span class="info-item-label">Empresa: </span>
+              <span data-bind="empresa"></span>
+            </div>
+            <div>
+              <span class="info-item-label">CNPJ: </span>
+              <span data-bind="cnpj"></span>
+            </div>
+            <div>
+              <span class="info-item-label">Retirada: </span>
+              <span data-bind="retirada"></span>
+            </div>
+            <div data-bind-container="endereco">
+              <span class="info-item-label">Endereço (Sedex): </span>
+              <span data-bind="endereco"></span>
+            </div>
+            <div>
+              <span class="info-item-label">Pagamento: </span>
+              <span data-bind="pagamento"></span>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Produto</th>
+                  <th>Código</th>
+                  <th class="text-right">Quantidade</th>
+                  <th class="text-right">Preço unitário (R$)</th>
+                  <th class="text-right">Total (R$)</th>
+                </tr>
+              </thead>
+              <tbody data-bind="tabela-produtos"></tbody>
+              <tfoot>
+                <tr>
+                  <th colspan="4" class="text-right">Subtotal</th>
+                  <th class="text-right" data-bind="subtotal"></th>
+                </tr>
+                <tr>
+                  <th colspan="4" class="text-right">Frete</th>
+                  <th class="text-right" data-bind="frete"></th>
+                </tr>
+                <tr>
+                  <th colspan="4" class="text-right">Total geral</th>
+                  <th class="text-right" data-bind="total-geral"></th>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          <div class="observacoes">
+            <div class="observacoes-label">Observações:</div>
+            <div data-bind="observacoes" class="small-text"></div>
+          </div>
+          <div class="assinatura-area">
+            <div style="flex:1;">
+              <div class="assinatura-linha">Assinatura / Carimbo da empresa</div>
+            </div>
+            <div style="flex:1;">
+              <div class="assinatura-linha">Responsável pela empresa</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="document-via">
+          <div class="document-header">
+            <div class="document-header-left">
+              <strong>CADIRIRI HIDRAULICA E PNEUMATICA LTDA</strong><br />
+              (11) 2601-2839<br />
+              Rua Barão de Monte Santo, N° 856<br />
+              03123020 - São Paulo, SP<br />
+              CNPJ: 09.577.109/0001-60 &mdash; IE: 148.138.546.116
+            </div>
+            <div class="document-header-right">
+              <span class="badge">Via Empresa</span><br />
+              Data: <span data-bind="data-atual"></span>
+            </div>
+          </div>
+          <div class="document-title">Orçamento Comercial</div>
+          <div class="info-grid">
+            <div>
+              <span class="info-item-label">Empresa: </span>
+              <span data-bind="empresa"></span>
+            </div>
+            <div>
+              <span class="info-item-label">CNPJ: </span>
+              <span data-bind="cnpj"></span>
+            </div>
+            <div>
+              <span class="info-item-label">Retirada: </span>
+              <span data-bind="retirada"></span>
+            </div>
+            <div data-bind-container="endereco">
+              <span class="info-item-label">Endereço (Sedex): </span>
+              <span data-bind="endereco"></span>
+            </div>
+            <div>
+              <span class="info-item-label">Pagamento: </span>
+              <span data-bind="pagamento"></span>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Produto</th>
+                  <th>Código</th>
+                  <th class="text-right">Quantidade</th>
+                  <th class="text-right">Preço unitário (R$)</th>
+                  <th class="text-right">Total (R$)</th>
+                </tr>
+              </thead>
+              <tbody data-bind="tabela-produtos"></tbody>
+              <tfoot>
+                <tr>
+                  <th colspan="4" class="text-right">Subtotal</th>
+                  <th class="text-right" data-bind="subtotal"></th>
+                </tr>
+                <tr>
+                  <th colspan="4" class="text-right">Frete</th>
+                  <th class="text-right" data-bind="frete"></th>
+                </tr>
+                <tr>
+                  <th colspan="4" class="text-right">Total geral</th>
+                  <th class="text-right" data-bind="total-geral"></th>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          <div class="observacoes">
+            <div class="observacoes-label">Observações:</div>
+            <div data-bind="observacoes" class="small-text"></div>
+          </div>
+          <div class="assinatura-area">
+            <div style="flex:1;">
+              <div class="assinatura-linha">Assinatura / Carimbo da empresa</div>
+            </div>
+            <div style="flex:1;">
+              <div class="assinatura-linha">Responsável pela empresa</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

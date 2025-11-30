@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ordem de Manutenção</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="../js/pdf.js"></script>
+  <script src="../js/manutencao.js" defer></script>
+</head>
+<body>
+  <div class="main-container">
+    <div class="form-section">
+      <h1>Ordem de Manutenção</h1>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="manut-nome">Nome do cliente</label>
+          <input type="text" id="manut-nome" />
+        </div>
+        <div class="form-group">
+          <label for="manut-telefone">Telefone</label>
+          <input type="text" id="manut-telefone" />
+        </div>
+        <div class="form-group">
+          <label for="manut-produto">Produto</label>
+          <select id="manut-produto">
+            <option value="cilindro">Cilindro</option>
+            <option value="bomba">Bomba</option>
+            <option value="valvula">Válvula</option>
+            <option value="unidade">Unidade hidráulica</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="manut-codigo">Código do produto</label>
+          <input type="text" id="manut-codigo" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="manut-problema">Problema relatado</label>
+        <textarea id="manut-problema"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="manut-observacoes">Observações</label>
+        <textarea id="manut-observacoes"></textarea>
+      </div>
+      <div class="button-row" style="margin-top:16px;">
+        <button type="button" data-pdf-button="manut-print" onclick="gerarPDF('manut-print','ordem-manutencao.pdf')">Gerar PDF</button>
+        <button type="button" onclick="location.href='../index.html'">Voltar</button>
+      </div>
+    </div>
+
+    <div class="print-wrapper">
+      <div id="manut-print" class="print-area">
+        <div class="document-via">
+          <div class="document-header">
+            <div class="document-header-left">
+              <img src="../img/logo-cadiriri.jpeg" alt="Cadiriri" class="logo-empresa" />
+              <strong>CADIRIRI HIDRAULICA E PNEUMATICA LTDA</strong><br />
+              (11) 2601-2839<br />
+              Rua Barão de Monte Santo, N° 856<br />
+              03123020 - São Paulo, SP<br />
+              CNPJ: 09.577.109/0001-60 &mdash; IE: 148.138.546.116
+            </div>
+            <div class="document-header-right">
+              <span class="badge">Via Cliente</span><br />
+              Data: <span data-bind="data-atual"></span>
+            </div>
+          </div>
+          <div class="document-title">Ordem de Manutenção</div>
+          <div class="info-grid">
+            <div>
+              <span class="info-item-label">Cliente: </span>
+              <span data-bind="nome"></span>
+            </div>
+            <div>
+              <span class="info-item-label">Telefone: </span>
+              <span data-bind="telefone"></span>
+            </div>
+            <div>
+              <span class="info-item-label">Produto: </span>
+              <span data-bind="produto"></span>
+            </div>
+            <div>
+              <span class="info-item-label">Código: </span>
+              <span data-bind="codigo"></span>
+            </div>
+          </div>
+          <div class="highlight-box">
+            <strong>Problema relatado</strong><br />
+            <span data-bind="problema" class="small-text"></span>
+          </div>
+          <div class="observacoes">
+            <div class="observacoes-label">Observações:</div>
+            <div data-bind="observacoes" class="small-text"></div>
+          </div>
+          <div class="assinatura-area">
+            <div style="flex:1;">
+              <div class="assinatura-linha">Assinatura do cliente</div>
+            </div>
+            <div style="flex:1;">
+              <div class="assinatura-linha">Responsável técnico</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="document-via">
+          <div class="document-header">
+            <div class="document-header-left">
+              <img src="logo-cadiriri.jpeg" alt="Cadiriri" class="logo-empresa" />
+              <strong>CADIRIRI HIDRAULICA E PNEUMATICA LTDA</strong><br />
+              (11) 2601-2839<br />
+              Rua Barão de Monte Santo, N° 856<br />
+              03123020 - São Paulo, SP<br />
+              CNPJ: 09.577.109/0001-60 &mdash; IE: 148.138.546.116
+            </div>
+            <div class="document-header-right">
+              <span class="badge">Via Empresa</span><br />
+              Data: <span data-bind="data-atual"></span>
+            </div>
+          </div>
+          <div class="document-title">Ordem de Manutenção</div>
+          <div class="info-grid">
+            <div>
+              <span class="info-item-label">Cliente: </span>
+              <span data-bind="nome"></span>
+            </div>
+            <div>
+              <span class="info-item-label">Telefone: </span>
+              <span data-bind="telefone"></span>
+            </div>
+            <div>
+              <span class="info-item-label">Produto: </span>
+              <span data-bind="produto"></span>
+            </div>
+            <div>
+              <span class="info-item-label">Código: </span>
+              <span data-bind="codigo"></span>
+            </div>
+          </div>
+          <div class="highlight-box">
+            <strong>Problema relatado</strong><br />
+            <span data-bind="problema" class="small-text"></span>
+          </div>
+          <div class="observacoes">
+            <div class="observacoes-label">Observações:</div>
+            <div data-bind="observacoes" class="small-text"></div>
+          </div>
+          <div class="assinatura-area">
+            <div style="flex:1;">
+              <div class="assinatura-linha">Assinatura do cliente</div>
+            </div>
+            <div style="flex:1;">
+              <div class="assinatura-linha">Responsável técnico</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

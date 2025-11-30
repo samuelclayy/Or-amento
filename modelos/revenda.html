@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Formulário de Revenda</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="../js/pdf.js"></script>
+  <script src="../js/revenda.js" defer></script>
+</head>
+<body>
+  <div class="main-container">
+    <div class="form-section">
+      <h1>Formulário de Revenda</h1>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="rev-produto">Produto</label>
+          <input type="text" id="rev-produto" />
+        </div>
+        <div class="form-group">
+          <label for="rev-codigo">Código</label>
+          <input type="text" id="rev-codigo" />
+        </div>
+        <div class="form-group">
+          <label for="rev-valor-unitario">Valor unitário (R$)</label>
+          <input type="number" id="rev-valor-unitario" min="0" step="0.01" />
+        </div>
+        <div class="form-group">
+          <label for="rev-quantidade">Quantidade</label>
+          <input type="number" id="rev-quantidade" min="1" step="1" />
+        </div>
+        <div class="form-group">
+          <label for="rev-cnpj">CNPJ</label>
+          <input type="text" id="rev-cnpj" />
+        </div>
+        <div class="form-group">
+          <label for="rev-estado">Estado (UF)</label>
+          <input type="text" id="rev-estado" maxlength="2" />
+        </div>
+        <div class="form-group">
+          <label for="rev-sedex">Sedex?</label>
+          <select id="rev-sedex">
+            <option value="nao">Não</option>
+            <option value="sim">Sim</option>
+          </select>
+        </div>
+        <div class="form-group" id="rev-sedex-valor-group" style="display:none;">
+          <label for="rev-sedex-valor">Valor Sedex (R$)</label>
+          <input type="number" id="rev-sedex-valor" min="0" step="0.01" />
+        </div>
+      </div>
+
+      <div class="button-row" style="margin-top:16px;">
+        <button type="button" data-pdf-button="revenda-print" onclick="gerarPDF('revenda-print','formulario-revenda.pdf')">Gerar PDF</button>
+        <button type="button" id="rev-wpp-gerar">Gerar texto WhatsApp</button>
+        <button type="button" id="rev-wpp-copiar" disabled>Copiar para WhatsApp</button>
+        <button type="button" onclick="location.href='../index.html'">Voltar</button>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Texto WhatsApp</h2>
+      <p>Use este texto para enviar a proposta de revenda diretamente pelo WhatsApp.</p>
+      <div class="form-group">
+        <label for="rev-wpp-resultado">Copie o texto abaixo e cole no WhatsApp:</label>
+        <textarea id="rev-wpp-resultado" readonly style="min-height:160px;"></textarea>
+      </div>
+    </div>
+
+    <div class="print-wrapper">
+      <div id="revenda-print" class="print-area">
+        <div class="document-via">
+          <div class="document-header">
+            <div class="document-header-left">
+              <img src="../img/logo-cadiriri.jpeg" alt="Cadiriri" class="logo-empresa" />
+              <strong>CADIRIRI HIDRAULICA E PNEUMATICA LTDA</strong><br />
+              (11) 2601-2839<br />
+              Rua Barão de Monte Santo, N° 856<br />
+              03123020 - São Paulo, SP<br />
+              CNPJ: 09.577.109/0001-60 &mdash; IE: 148.138.546.116
+            </div>
+            <div class="document-header-right">
+              <span class="badge">Revenda</span><br />
+              Data: <span data-bind="data-atual"></span>
+            </div>
+          </div>
+          <div class="document-title">Formulário de Revenda</div>
+          <div class="info-grid">
+            <div>
+              <span class="info-item-label">Produto: </span>
+              <span data-bind="produto"></span>
+            </div>
+            <div>
+              <span class="info-item-label">Código: </span>
+              <span data-bind="codigo"></span>
+            </div>
+            <div>
+              <span class="info-item-label">Valor unitário (R$): </span>
+              <span data-bind="valor-unitario"></span>
+            </div>
+            <div>
+              <span class="info-item-label">Quantidade: </span>
+              <span data-bind="quantidade"></span>
+            </div>
+            <div>
+              <span class="info-item-label">Total (R$): </span>
+              <span data-bind="total"></span>
+            </div>
+            <div>
+              <span class="info-item-label">CNPJ: </span>
+              <span data-bind="cnpj"></span>
+            </div>
+            <div>
+              <span class="info-item-label">Estado: </span>
+              <span data-bind="estado"></span>
+            </div>
+            <div>
+              <span class="info-item-label">Sedex: </span>
+              <span data-bind="sedex"></span>
+            </div>
+            <div data-bind-container="sedex-valor">
+              <span class="info-item-label">Valor Sedex (R$): </span>
+              <span data-bind="sedex-valor"></span>
+            </div>
+          </div>
+          <div class="assinatura-area">
+            <div style="flex:1;">
+              <div class="assinatura-linha">Assinatura / Carimbo</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
